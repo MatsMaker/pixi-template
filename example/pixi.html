@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pixi Inspector</title>
+    <script type="text/javascript" src="http://localhost:8080/webpack-dev-server.js"></script>
+</head>
+
+<body style="display: flex">
+
+    <canvas id="example" style="width: 480;height: 360px;"></canvas>
+
+    <div id="devpanel" style="flex: 1">
+        <pixi-panel></pixi-panel>
+        <!-- this is where the PixiPanel will get rendered -->
+    </div>
+
+    <script src="../node_modules/pixi.js/dist/pixi.js"></script>
+    <script>
+    	var pixiApplication = new PIXI.Application(800, 600, {backgroundColor : 0x1099bb});
+		document.body.appendChild(app.view);
+    </script>
+</body>
+
+</html>

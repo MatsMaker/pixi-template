@@ -1,0 +1,28 @@
+{
+  "name": "pixi-template",
+  "version": "0.0.1",
+  "description": "pixi template",
+  "main": "src/index.js",
+  "bin": {
+    "ptmpl": "./bin/ptmpl"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pixijs",
+    "template",
+    "compiller"
+  ],
+  "author": "matsmaker",
+  "license": "ISC",
+  "engines": {
+    "node": ">=9.4.0",
+    "npm": ">=5.6.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.10",
+    "minimist": "^1.2.0",
+    "xml2js": "^0.4.19"
+  }
+}

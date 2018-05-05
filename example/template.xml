@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root name="pixiApplication">
+    <Sprite name="bunny">
+        <texture fromImage="assets/bunny.png"/>
+    </Sprite>
+</root>
