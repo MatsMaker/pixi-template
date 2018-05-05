@@ -1,3 +1,3 @@
-module.exports = function getArguments() {
+module.exports = (function getArguments() {
     return require('minimist')(process.argv.slice(2));
-}
+})();
