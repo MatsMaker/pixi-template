@@ -1,2 +1,0 @@
-const rootContainer = pixiApplication.stage;
-const Sprite_0 = new PIXI.Sprite(PIXI.Texture.fromImage('assets/bunny.png'));rootContainer.addChild(Sprite_0);

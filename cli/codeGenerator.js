@@ -1,7 +1,4 @@
 const _ = require('lodash');
-const arguments = require('./argument');
-
-const CODE_SEPARATOR = (arguments.debug) ? `\n` : ''; 
 
 function isNumber(s){
     return !isNaN(s);
@@ -62,10 +59,10 @@ module.exports = function(parseData, cb) {
             const valueNode = `${nodeName}_${nodeId}`;
 
             codeRows.push(`const ${valueNode} = new PIXI.${nodeName}(${texture});`);
-            codeRows.concat(setProperty(nodeData[0].$, valueNode, code));
+            codeRows.push(...setProperty(nodeData[0].$, valueNode, code));
             codeRows.push(addNode(lvlSlice, valueNode));
 
-            code += codeRows.join(CODE_SEPARATOR);
+            code += codeRows.join('\n');
             return;
         }
 
