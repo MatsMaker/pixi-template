@@ -7,6 +7,10 @@ function isNumber(s){
     return !isNaN(s);
 }
 
+String.prototype.replaceAt=function(index, replacement) {
+    return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
+}
+
 module.exports = class Writer {
 
     getText() {
@@ -52,8 +56,16 @@ module.exports = class Writer {
         this.addRow(`${lvlSlice}.addChild(${child})`);
     }
 
-    addNewPixiObject(valueNode, nodeName, params) {
-        this.addRow(`const ${valueNode} = new PIXI.${nodeName}(${params})`);
+    addObject(valueNode, nodeName, params) {
+        let name = nodeName.toLowerCase();
+        name = name.replaceAt(0, name[0].toUpperCase());
+        this.addRow(`const ${valueNode} = new PIXI.${name}(${params})`);
+    }
+
+    addArguments() {
+        const valueName = 'bunny';
+        this.addRow(`const ${valueName} = PIXI.Texture.fromImage('assets/bunny.png')`);
+        return valueName;
     }
 
     addRow(string = '') {
@@ -69,10 +81,6 @@ module.exports = class Writer {
             indent += this._indentSpace;
         }
         return indent;
-    }
-
-    getProperty() {
-        return `PIXI.Texture.fromImage('assets/bunny.png')`;
     }
 
 }

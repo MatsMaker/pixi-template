@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 <root name="pixiApplication">
-    <Sprite name="bunny" x="50" y="50">
-        <texture fromImage="assets/bunny.png"/>
-    </Sprite>
+    <SPRITE name="bunny" x="50" y="50">
+        <:arguments order="texture"/>
+        <texture :fromImage="assets/bunny.png"/>
+    </SPRITE>
 </root>

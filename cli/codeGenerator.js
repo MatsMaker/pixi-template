@@ -1,16 +1,6 @@
 const _ = require('lodash');
-const Writer = require('./writer');
-
-
-function capitalLatter(string) {
-    let symbol;
-    if (string.length > 1) {
-        symbol = string[0];
-    } else {
-        symbol = string;
-    }
-    return symbol === symbol.toUpperCase();
-}
+const Writer = require('./utils/writer');
+const Node = require('./utils/node');
 
 function generatorId(startId = -1) {
     return {
@@ -20,14 +10,6 @@ function generatorId(startId = -1) {
         },
         last: () => startId
     }
-}
-
-function notEmpty(nodeData) {
-    return Object.keys(nodeData).filter(key => capitalLatter(key)).length > 0;
-}
-
-function hasArguments(nodeData) {
-    return Object.keys(nodeData).filter(key => key !== '$').length > 0;
 }
 
 
@@ -41,35 +23,26 @@ function sliceParse(parseData, cb) {
     _.forEach(parseData.root, (nodeData, nodeName) => {
 
         const idGenerator = generatorId();
+        const node = new Node(nodeName, nodeData);
 
-        if (nodeName === '$') {
+        if (node.isArgument()
+            || node.isProperty()
+            || node.isRule()) {
             return;
         }
 
-        if (capitalLatter(nodeName)) {
+        if (node.isObject()) {
             writer.newSpace();
 
-            let childData; 
-            if (hasArguments(nodeData)) {
-                childData = writer.getProperty(nodeData);
-            }
-
+            const arg = writer.addArguments();
             const nodeId = idGenerator.new();
             const valueNode = `${nodeName}_${nodeId}`;
 
-            writer.addNewPixiObject(valueNode, nodeName, childData);
+            writer.addObject(valueNode, nodeName, arg);
             writer.setNodeProperty(valueNode, nodeData[0].$);
             writer.addNodeTo(valueNode, lvlSlice);
 
-            if (notEmpty(nodeData)) {
-                // run recursive parser
-            }
-
             writer.closeSpace();
-            return;
-        }
-
-        if (!capitalLatter(nodeName)) {
             return;
         }
 
