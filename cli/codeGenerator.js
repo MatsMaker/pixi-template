@@ -1,8 +1,6 @@
 const _ = require('lodash');
-const appSettings = require('./utils/argumentRun');
-const ROW_SPLIT = (appSettings.n) ? `;\n` : ';';
 const Writer = require('./writer');
-const writer = new Writer([], ROW_SPLIT);
+
 
 function capitalLatter(string) {
     let symbol;
@@ -25,13 +23,16 @@ function generatorId(startId = -1) {
 }
 
 function notEmpty(nodeData) {
-    return Object.keys(nodeData).filter(key => key !== '$').length > 0;
+    return Object.keys(nodeData).filter(key => {
+        return (key !== '$' || capitalLatter(key))
+    }).length > 0;
 } 
 
 
 function sliceParse(parseData, cb) {
 
     const lvlSlice = 'rootContainer';
+    const writer = new Writer();
 
     writer.rootStage(lvlSlice, parseData.root.$.name);
 
@@ -44,6 +45,8 @@ function sliceParse(parseData, cb) {
         }
 
         if (capitalLatter(nodeName)) {
+            writer.newSpace();
+
             let childData; 
             if (notEmpty(nodeData)) {
                 childData = `PIXI.Texture.fromImage('assets/bunny.png')`;
@@ -55,6 +58,8 @@ function sliceParse(parseData, cb) {
             writer.addNewPixiObject(valueNode, nodeName, childData);
             writer.setNodeProperty(valueNode, nodeData[0].$);
             writer.addNodeTo(valueNode, lvlSlice);
+
+            writer.closeSpace();
             return;
         }
 
