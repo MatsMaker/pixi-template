@@ -1,8 +1,8 @@
 const _ = require('lodash');
-
-function isNumber(s){
-    return !isNaN(s);
-}
+const appSettings = require('./utils/argumentRun');
+const ROW_SPLIT = (appSettings.n) ? `;\n` : ';';
+const Writer = require('./writer');
+const writer = new Writer([], ROW_SPLIT);
 
 function capitalLatter(string) {
     let symbol;
@@ -12,19 +12,6 @@ function capitalLatter(string) {
         symbol = string;
     }
     return symbol === symbol.toUpperCase();
-}
-
-function setProperty(nodeProperty, lvlSlice) {
-    const codeRow = [];
-    _.forEach(nodeProperty, (value, property) => {
-        const propertyValue = (isNumber(value)) ? parseFloat(value) : `'${value}'`;
-        codeRow.push(`${lvlSlice}.${property} = ${propertyValue};`);
-    });
-    return codeRow;
-}
-
-function addNode(lvlSlice, child) {
-    return `${lvlSlice}.addChild(${child});`
 }
 
 function generatorId(startId = -1) {
@@ -38,15 +25,15 @@ function generatorId(startId = -1) {
 }
 
 
-module.exports = function(parseData, cb) {
+function sliceParse(parseData, cb) {
 
     const lvlSlice = 'rootContainer';
-    let code = `const ${lvlSlice} = ${parseData.root.$.name}.stage;\n`;
+
+    writer.rootStage(lvlSlice, parseData.root.$.name);
 
     _.forEach(parseData.root, (nodeData, nodeName) => {
 
         const idGenerator = generatorId();
-        const codeRows = [];
 
         if (nodeName === '$') {
             return;
@@ -58,11 +45,9 @@ module.exports = function(parseData, cb) {
             const nodeId = idGenerator.new();
             const valueNode = `${nodeName}_${nodeId}`;
 
-            codeRows.push(`const ${valueNode} = new PIXI.${nodeName}(${texture});`);
-            codeRows.push(...setProperty(nodeData[0].$, valueNode, code));
-            codeRows.push(addNode(lvlSlice, valueNode));
-
-            code += codeRows.join('\n');
+            writer.addNewPixiObject(valueNode, nodeName, texture);
+            writer.setNodeProperty(valueNode, nodeData[0].$);
+            writer.addNodeTo(valueNode, lvlSlice);
             return;
         }
 
@@ -73,5 +58,8 @@ module.exports = function(parseData, cb) {
     });
 
 
-    cb(null, code);
+    cb(null, writer.getText());
 }
+
+
+module.exports = sliceParse;

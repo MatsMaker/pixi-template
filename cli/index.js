@@ -3,7 +3,7 @@ const path = require('path');
 const xml2js = require('xml2js');
 const {promisify} = require('util');
 
-const appSettings = require('./argument');
+const appSettings = require('./utils/argumentRun');
 const codeGenerator = require('./codeGenerator');
 
 const parser = new xml2js.Parser();
