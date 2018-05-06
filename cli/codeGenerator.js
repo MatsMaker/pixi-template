@@ -24,6 +24,10 @@ function generatorId(startId = -1) {
     }
 }
 
+function notEmpty(nodeData) {
+    return Object.keys(nodeData).filter(key => key !== '$').length > 0;
+} 
+
 
 function sliceParse(parseData, cb) {
 
@@ -40,12 +44,15 @@ function sliceParse(parseData, cb) {
         }
 
         if (capitalLatter(nodeName)) {
-            const texture = `PIXI.Texture.fromImage('assets/bunny.png')`;
+            let childData; 
+            if (notEmpty(nodeData)) {
+                childData = `PIXI.Texture.fromImage('assets/bunny.png')`;
+            }
 
             const nodeId = idGenerator.new();
             const valueNode = `${nodeName}_${nodeId}`;
 
-            writer.addNewPixiObject(valueNode, nodeName, texture);
+            writer.addNewPixiObject(valueNode, nodeName, childData);
             writer.setNodeProperty(valueNode, nodeData[0].$);
             writer.addNodeTo(valueNode, lvlSlice);
             return;
