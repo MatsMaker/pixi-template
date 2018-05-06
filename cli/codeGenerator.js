@@ -1,7 +1,8 @@
 const _ = require('lodash');
 const appSettings = require('./utils/argumentRun');
 const ROW_SPLIT = (appSettings.n) ? `;\n` : ';';
-const writer = new require('./writer')([], ROW_SPLIT);
+const Writer = require('./writer');
+const writer = new Writer([], ROW_SPLIT);
 
 function capitalLatter(string) {
     let symbol;
@@ -28,13 +29,11 @@ function sliceParse(parseData, cb) {
 
     const lvlSlice = 'rootContainer';
 
-    let code = rootStage(lvlSlice, parseData.root.$.name);
-    const codeRows = [];
+    writer.rootStage(lvlSlice, parseData.root.$.name);
 
     _.forEach(parseData.root, (nodeData, nodeName) => {
 
         const idGenerator = generatorId();
-        const codeRows = [];
 
         if (nodeName === '$') {
             return;
@@ -46,11 +45,9 @@ function sliceParse(parseData, cb) {
             const nodeId = idGenerator.new();
             const valueNode = `${nodeName}_${nodeId}`;
 
-            codeRows.push(`const ${valueNode} = new PIXI.${nodeName}(${texture})`);
-            codeRows.push(...setProperty(nodeData[0].$, valueNode, code));
-            codeRows.push(addNode(lvlSlice, valueNode));
-
-            code += codeRows.join(ROW_SPLIT);
+            writer.addNewPixiObject(valueNode, nodeName, texture);
+            writer.setNodeProperty(valueNode, nodeData[0].$);
+            writer.addNodeTo(valueNode, lvlSlice);
             return;
         }
 
@@ -61,7 +58,7 @@ function sliceParse(parseData, cb) {
     });
 
 
-    cb(null, code);
+    cb(null, writer.getText());
 }
 
 

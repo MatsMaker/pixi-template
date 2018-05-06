@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 function isNumber(s){
     return !isNaN(s);
 }
@@ -5,8 +7,8 @@ function isNumber(s){
 
 module.exports = class Writer {
 
-    get text() {
-        return this._rows.join(this._rowSplit);
+    getText() {
+        return this._rows.join(this._rowSplit) + this._rowSplit;
     }
 
     constructor(rows, rowSplit = ';') {
@@ -18,17 +20,19 @@ module.exports = class Writer {
         this.addRow(`const ${lvlSlice} = ${app}.stage`);
     }
 
-    addNode(lvlSlice, child) {
+    setNodeProperty(lvlSlice, nodeProperty) {
+        _.forEach(nodeProperty, (value, property) => {
+            const propertyValue = (isNumber(value)) ? parseFloat(value) : `'${value}'`;
+            this.addRow(`${lvlSlice}.${property} = ${propertyValue}`);
+        });
+    }
+
+    addNodeTo(child, lvlSlice) {
         this.addRow(`${lvlSlice}.addChild(${child})`);
     }
 
-    setNodeProperty(nodeProperty, lvlSlice) {
-        const codeRows = [];
-        _.forEach(nodeProperty, (value, property) => {
-            const propertyValue = (isNumber(value)) ? parseFloat(value) : `'${value}'`;
-            codeRows.push(`${lvlSlice}.${property} = ${propertyValue}`);
-        });
-        this.addRow.push(...codeRows);
+    addNewPixiObject(valueNode, nodeName, params) {
+        this.addRow(`const ${valueNode} = new PIXI.${nodeName}(${params})`);
     }
 
     addRow(string = '') {
