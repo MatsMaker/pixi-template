@@ -23,10 +23,12 @@ function generatorId(startId = -1) {
 }
 
 function notEmpty(nodeData) {
-    return Object.keys(nodeData).filter(key => {
-        return (key !== '$' || capitalLatter(key))
-    }).length > 0;
-} 
+    return Object.keys(nodeData).filter(key => capitalLatter(key)).length > 0;
+}
+
+function hasArguments(nodeData) {
+    return Object.keys(nodeData).filter(key => key !== '$').length > 0;
+}
 
 
 function sliceParse(parseData, cb) {
@@ -48,8 +50,8 @@ function sliceParse(parseData, cb) {
             writer.newSpace();
 
             let childData; 
-            if (notEmpty(nodeData)) {
-                childData = `PIXI.Texture.fromImage('assets/bunny.png')`;
+            if (hasArguments(nodeData)) {
+                childData = writer.getProperty(nodeData);
             }
 
             const nodeId = idGenerator.new();
@@ -58,6 +60,10 @@ function sliceParse(parseData, cb) {
             writer.addNewPixiObject(valueNode, nodeName, childData);
             writer.setNodeProperty(valueNode, nodeData[0].$);
             writer.addNodeTo(valueNode, lvlSlice);
+
+            if (notEmpty(nodeData)) {
+                // run recursive parser
+            }
 
             writer.closeSpace();
             return;

@@ -10,7 +10,7 @@ function isNumber(s){
 module.exports = class Writer {
 
     getText() {
-        if (this._indent !== 0) {
+        if (this._indentIndex !== 0) {
             return new Error('Not all namespaces are closed');
         }
         return this._rows.join(this._rowSplit) + this._rowSplit;
@@ -21,7 +21,7 @@ module.exports = class Writer {
         this._formatting = appSettings.f;
         this._rows = rows || [];
         this._indentSpace = '   ';
-        this._indent = 0;
+        this._indentIndex = 0;
     }
 
     rootStage(lvlSlice, app) {
@@ -37,14 +37,14 @@ module.exports = class Writer {
 
     newSpace() {
         this.addRow('{');
-        this._indent++;
+        this._indentIndex++;
     }
 
     closeSpace() {
-        if (this._indent < 0) {
+        if (this._indentIndex < 0) {
             return new Error('All namespaces are closed');
         }
-        this._indent--;
+        this._indentIndex--;
         this.addRow('}');
     }
 
@@ -65,10 +65,14 @@ module.exports = class Writer {
         if (!this._formatting) {
             return indent;
         }
-        for (let i = 0; i < this._indent; i++) {
+        for (let i = 0; i < this._indentIndex; i++) {
             indent += this._indentSpace;
         }
         return indent;
+    }
+
+    getProperty() {
+        return `PIXI.Texture.fromImage('assets/bunny.png')`;
     }
 
 }
