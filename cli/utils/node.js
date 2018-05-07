@@ -1,51 +1,80 @@
+
+function isObject(name) {
+    return name === name.toUpperCase();
+}
+
+function isArgument(name) {
+    const firsSymbolName = getFirstSymbol(name);
+    return firsSymbolName.toLowerCase() === firsSymbolName;
+}
+
+function isProperty(name) {
+    return '$' === name;
+}
+
+function isRule(name) {
+    return ':' === getFirstSymbol(name);
+}
+
+function getFirstSymbol(string) {
+    let symbol;
+    if (string.length > 1) {
+        symbol = string[0];
+    } else {
+        symbol = string;
+    }
+    return symbol;
+}
+
+function getType(name) {
+    if (isProperty(name)) {
+        return 'property';
+    }
+    if (isRule(name)) {
+        return 'rule';
+    }
+    if (isObject(name)) {
+        return 'object';
+    }
+    if (isArgument(name)) {
+            return 'argument';
+    }
+    return null;
+}
+
+
+const sName = Symbol('name');
+const sKey = Symbol('key');
+const sData = Symbol('data');
+const sType = Symbol('type');
+
+
 module.exports = class Note {
 
-    set nodeName(newName) {
-        this._nodeName = newName;
-        this._firstSymbolName = this._getFirstSymbol(this._nodeName);
+    set name(name) {
+        this[sName] = name;
+        this[sType] = getType(name);
     }
 
-    get nodeName() {
-        return this._nodeName;
+    get name() {
+        return this[sName];
     }
 
-    constructor(nodeName, nodeData){
-        this._nodeData = nodeData;
-        this.nodeName = nodeName;
-    }
-    
-    isObject() {
-        return this._nodeName === this._nodeName.toUpperCase();
+    set data(data) {
+        this[sData] = data;
     }
 
-    isArgument() {
-        return this._firstSymbolName === this._firstSymbolName.toLowerCase();
-    }
-    
-    isProperty() {
-        return '$' === this._firstSymbolName;
-    }
-    
-    isRule() {
-        return ':' === this._firstSymbolName;
+    get data() {
+        return this[sData];
     }
 
-    notEmpty() {
-        return Object.keys(this._nodeData).filter(key => capitalLatter(key)).length > 0;
-    }
-    
-    hasArguments() {
-        return Object.keys(this._nodeData).filter(key => key !== '$').length > 0;
+    get type() {
+        return this[sType];
     }
 
-    _getFirstSymbol(string) {
-        let symbol;
-        if (string.length > 1) {
-            symbol = string[0];
-        } else {
-            symbol = string;
-        }
-        return symbol;
+    constructor(name, data) {
+        this.name = name;
+        this.data = data;
     }
 
 }

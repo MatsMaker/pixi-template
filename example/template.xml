@@ -1,7 +1,23 @@
 <?xml version="1.1" encoding="UTF-8" ?>
-<root name="pixiApplication">
+<Root name="pixiApplication">
     <SPRITE name="bunny" x="50" y="50">
         <:arguments order="texture"/>
         <texture :fromImage="assets/bunny.png"/>
     </SPRITE>
-</root>
+    <CONTAINER name="nnn">
+        <SPRITE name="bunny" x="50" y="50">
+            <:arguments order="texture"/>
+            <texture :fromImage="assets/bunny.png"/>
+        </SPRITE>
+        <SPRITE name="bunny1" x="50" y="50">
+            <:arguments order="texture"/>
+            <texture :fromImage="assets/bunny.png"/>
+        </SPRITE>
+        <CONTAINER name="tttt">
+            <SPRITE name="bunny1" x="50" y="50">
+                <:arguments order="texture"/>
+                <texture :fromImage="assets/bunny.png"/>
+            </SPRITE>
+        </CONTAINER>
+    </CONTAINER>
+</Root>

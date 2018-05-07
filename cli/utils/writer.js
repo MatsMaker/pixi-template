@@ -63,9 +63,7 @@ module.exports = class Writer {
     }
 
     addArguments() {
-        const valueName = 'bunny';
-        this.addRow(`const ${valueName} = PIXI.Texture.fromImage('assets/bunny.png')`);
-        return valueName;
+
     }
 
     addRow(string = '') {
@@ -81,6 +79,12 @@ module.exports = class Writer {
             indent += this._indentSpace;
         }
         return indent;
+    }
+
+    _addArgument(nodeName, method, arg) {
+        const name = nodeName.replaceAt(0, nodeName[0].toUpperCase());
+        this.addRow(`const ${nodeName} = PIXI.${name}.${method}(${arg})`);
+        return valueName;
     }
 
 }
