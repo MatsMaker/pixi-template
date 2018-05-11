@@ -1,10 +1,15 @@
 const _ = require('lodash');
 const appSettings = require('../utils/argumentRun');
+const patterns = require('./patterns');
 
 const ROW_SPLIT = (appSettings.f) ? `;\n` : ';';
 
 function isNumber(s){
     return !isNaN(s);
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 String.prototype.replaceAt=function(index, replacement) {
@@ -60,10 +65,18 @@ module.exports = class Writer {
         this.addRow(`const ${valueNode} = new PIXI.${name}(${params})`);
     }
 
-    addArguments() {
-        const valueName = 'bunny';
-        this.addRow(`const ${valueName} = PIXI.Texture.fromImage('assets/bunny.png')`);
-        return valueName;
+    addArguments(argList) {
+        const arglist = [];
+        _.forEach(argList, (arg, i) => {
+            const valueName = arg.name + i;
+            const pattern = patterns[arg.name];
+            if (!_.isUndefined(pattern)) {
+                arglist.push(valueName);
+                this.addRow(pattern(valueName, arg));
+            }
+            return valueName;
+        });
+        return arglist;
     }
 
     addRow(string = '') {
