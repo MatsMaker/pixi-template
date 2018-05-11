@@ -56,9 +56,7 @@ module.exports = class Writer {
         this.addRow(`${lvlSlice}.addChild(${child})`);
     }
 
-    addObject(valueNode, nodeName, params) {
-        let name = nodeName.toLowerCase();
-        name = name.replaceAt(0, name[0].toUpperCase());
+    addObject(valueNode, name, params) {
         this.addRow(`const ${valueNode} = new PIXI.${name}(${params})`);
     }
 

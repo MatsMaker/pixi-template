@@ -1,23 +1,23 @@
 <?xml version="1.1" encoding="UTF-8" ?>
-<Root name="pixiApplication">
-    <SPRITE name="bunny" x="50" y="50">
-        <:arguments order="texture"/>
-        <texture :fromImage="assets/bunny.png"/>
-    </SPRITE>
-    <CONTAINER name="nnn">
-        <SPRITE name="bunny" x="50" y="50">
+<ROOT name="pixiApplication">
+    <Container name="nnn">
+        <Sprite name="bunny" x="50" y="50" :deep="15">
             <:arguments order="texture"/>
-            <texture :fromImage="assets/bunny.png"/>
-        </SPRITE>
-        <SPRITE name="bunny1" x="50" y="50">
+            <texture fromImage="assets/bunny.png"/>
+        </Sprite>
+        <Sprite name="bunny1" x="50" y="50">
             <:arguments order="texture"/>
-            <texture :fromImage="assets/bunny.png"/>
-        </SPRITE>
-        <CONTAINER name="tttt">
-            <SPRITE name="bunny1" x="50" y="50">
+            <texture fromImage="assets/bunny.png"/>
+        </Sprite>
+        <Container name="tttt">
+            <Sprite name="bunny1" x="50" y="50">
                 <:arguments order="texture"/>
-                <texture :fromImage="assets/bunny.png"/>
-            </SPRITE>
-        </CONTAINER>
-    </CONTAINER>
-</Root>
+                <texture fromImage="assets/bunny.png"/>
+            </Sprite>
+        </Container>
+    </Container>
+    <Sprite :type="object" :order="15" name="bunny" x="50" y="50">
+        <:arguments order="texture"/>
+        <texture fromImage="assets/bunny.png"/>
+    </Sprite>
+</ROOT>

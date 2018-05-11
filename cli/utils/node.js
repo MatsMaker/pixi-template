@@ -1,5 +1,10 @@
 
 function isObject(name) {
+    const firsSymbolName = getFirstSymbol(name);
+    return name === name.toUpperCase() + name.substr(2, name.length);
+}
+
+function isTheme(name) {
     return name === name.toUpperCase();
 }
 
@@ -17,13 +22,7 @@ function isRule(name) {
 }
 
 function getFirstSymbol(string) {
-    let symbol;
-    if (string.length > 1) {
-        symbol = string[0];
-    } else {
-        symbol = string;
-    }
-    return symbol;
+    return string.substr(0, 1);
 }
 
 function getType(name) {
@@ -32,6 +31,9 @@ function getType(name) {
     }
     if (isRule(name)) {
         return 'rule';
+    }
+    if (isTheme(name)) {
+        return 'theme';
     }
     if (isObject(name)) {
         return 'object';
@@ -44,9 +46,9 @@ function getType(name) {
 
 
 const sName = Symbol('name');
-const sKey = Symbol('key');
-const sData = Symbol('data');
+const sProperty = Symbol('property');
 const sType = Symbol('type');
+const sChildren = Symbol('children');
 
 
 module.exports = class Note {
@@ -60,21 +62,30 @@ module.exports = class Note {
         return this[sName];
     }
 
-    set data(data) {
-        this[sData] = data;
+    set property(property) {
+        this[sProperty] = property;
     }
 
-    get data() {
-        return this[sData];
+    get property() {
+        return this[sProperty];
     }
 
     get type() {
         return this[sType];
     }
+    
+    get children() {
+        return this[sChildren];
+    }
 
-    constructor(name, data) {
+    addChild(child) {
+        this[sChildren].push(child);
+    }
+
+    constructor(name, property) {
+        this[sChildren] = [];
         this.name = name;
-        this.data = data;
+        this.property = property;
     }
 
 }

@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const Writer = require('./utils/writer');
 const Node = require('./utils/node');
+const CONST = require('./const');
 
 function generatorId(startId = -1) {
     return {
@@ -12,28 +13,17 @@ function generatorId(startId = -1) {
     }
 }
 
-function deepParse(list, parentNode, isRoot = false) {
+function deepParse(list, parentNode) {
+    if (list.length === 0) {
+        return [];
+    }
     _.forEach(list, (data, key) => {
-        const node = new Node(key, data);
-        if (node.type === 'property') {
-            parentNode['property'] = data;
-            return;
-        }
-        if (_.isNull(parentNode)) {
-            parentNode = node;
-        } else if (!_.isNull(node.type)) {
-            const propertyName = node.type + "List";
-            if (!_.isArray(parentNode[propertyName])) {
-                parentNode[propertyName] = [];
-            }
-            parentNode[propertyName].push(node);
-        }
-        if (_.isArray(data)) {
-            _.forEach(data, d => {
-                deepParse(d, node);
-            });
-        } else if (node.type === 'object' || isRoot) {
-            deepParse(data, node);
+        const node = new Node(data[CONST.NAME_KEY], data[CONST.ATTR_KEY]);
+        parentNode.addChild(node);
+        if (_.isArray(data[CONST.CHILD_KEY])) {
+            deepParse(data[CONST.CHILD_KEY], node);
+        } else {
+            return [];
         }
     });
     return parentNode;
@@ -42,7 +32,9 @@ function deepParse(list, parentNode, isRoot = false) {
 
 function sliceParse(parseData, cb) {
 
-    const nodes = deepParse(parseData, null, true);
+    const rootObj = parseData[CONST.ROOT_TAG];
+    const rootNode = new Node(rootObj[CONST.NAME_KEY], rootObj[CONST.ATTR_KEY]);
+    const nodes = deepParse(rootObj[CONST.CHILD_KEY], rootNode);
 
     const lvlSlice = 'rootContainer';
     const writer = new Writer();
