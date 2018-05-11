@@ -49,6 +49,8 @@ const sName = Symbol('name');
 const sProperty = Symbol('property');
 const sType = Symbol('type');
 const sChildren = Symbol('children');
+const sRules = Symbol('rules');
+const sArguments = Symbol('arguments');
 
 
 module.exports = class Note {
@@ -78,12 +80,38 @@ module.exports = class Note {
         return this[sChildren];
     }
 
+    get rules() {
+        return this[sRules];
+    }
+
+    get arguments() {
+        return this[sArguments]
+    }
+
     addChild(child) {
         this[sChildren].push(child);
     }
 
+    addRule(rule) {
+        this[sRules].push(rule);
+    }
+
+    addArgument(arg) {
+        this[sArguments].push(arg);
+    }
+
+    isRule() {
+        return isRule(this.name);
+    }
+
+    isArgument() {
+        return isArgument(this.name);
+    }
+
     constructor(name, property) {
         this[sChildren] = [];
+        this[sRules] = [];
+        this[sArguments] = [];
         this.name = name;
         this.property = property;
     }
