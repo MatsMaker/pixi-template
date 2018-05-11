@@ -36,13 +36,16 @@ function deepParse(list, parentNode) {
     return parentNode;
 }
 
+function deepAnalysis(parseData) {
+    const rootObj = parseData[CONST.ROOT_TAG];
+    const rootNode = new Node(rootObj[CONST.NAME_KEY], rootObj[CONST.ATTR_KEY]);
+    return deepParse(rootObj[CONST.CHILD_KEY], rootNode);
+}
+
 
 function sliceParse(parseData, cb) {
 
-    const rootObj = parseData[CONST.ROOT_TAG];
-    const rootNode = new Node(rootObj[CONST.NAME_KEY], rootObj[CONST.ATTR_KEY]);
-    const nodes = deepParse(rootObj[CONST.CHILD_KEY], rootNode);
-
+    const nodes = deepAnalysis(parseData);
     const lvlSlice = 'rootContainer';
     const writer = new Writer();
 
