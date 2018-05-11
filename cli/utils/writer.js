@@ -71,12 +71,14 @@ module.exports = class Writer {
             const valueName = arg.name + i;
             const pattern = patterns[arg.name];
             if (!_.isUndefined(pattern)) {
-                arglist.push(valueName);
                 this.addRow(pattern(valueName, arg));
+                arglist.push(valueName);
+            } else {
+                // TODO add default pattern this._addArgument(valueName, )
             }
             return valueName;
         });
-        return arglist;
+        return arglist.join(',');
     }
 
     addRow(string = '') {
@@ -97,7 +99,7 @@ module.exports = class Writer {
     _addArgument(nodeName, method, arg) {
         const name = nodeName.replaceAt(0, nodeName[0].toUpperCase());
         this.addRow(`const ${nodeName} = PIXI.${name}.${method}(${arg})`);
-        return valueName;
+        return nodeName;
     }
 
 }
