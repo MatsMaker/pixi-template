@@ -1,7 +1,7 @@
 
 function isObject(name) {
     const firsSymbolName = getFirstSymbol(name);
-    return name === name.toUpperCase() + name.substr(2, name.length);
+    return name === firsSymbolName.toUpperCase() + name.substr(1);
 }
 
 function isTheme(name) {
@@ -72,6 +72,10 @@ module.exports = class Note {
         return this[sProperty];
     }
 
+    getProperty(pName) {
+        return this[sProperty][pName];
+    }
+
     get type() {
         return this[sType];
     }
@@ -106,6 +110,10 @@ module.exports = class Note {
 
     isArgument() {
         return isArgument(this.name);
+    }
+
+    isObject() {
+        return isObject(this.name);
     }
 
     constructor(name, property) {

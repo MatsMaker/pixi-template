@@ -45,38 +45,31 @@ function deepAnalysis(parseData) {
 
 function sliceParse(parseData, cb) {
 
-    const nodes = deepAnalysis(parseData);
+    const rootNode = deepAnalysis(parseData);
     const lvlSlice = 'rootContainer';
     const writer = new Writer();
 
-    // writer.rootStage(lvlSlice, parseData.root.$.name);
-    // _.forEach(parseData.root, (nodeData, nodeName) => {
+    writer.rootStage(lvlSlice, rootNode.property.appName);
 
-    //     const idGenerator = generatorId();
-    //     const node = new Node(nodeName, nodeData);
+    _.forEach(rootNode.children, node => {
+        const idGenerator = generatorId();
 
-    //     if (node.isArgument()
-    //         || node.isProperty()
-    //         || node.isRule()) {
-    //         return;
-    //     }
+        if (node.isObject()) {
+            writer.newSpace();
 
-    //     if (node.isObject()) {
-    //         writer.newSpace();
+            const arg = writer.addArguments(node.arguments);
+            const nodeId = idGenerator.new();
+            const valueNode = `${node.name}_${nodeId}`;
 
-    //         const arg = writer.addArguments();
-    //         const nodeId = idGenerator.new();
-    //         const valueNode = `${nodeName}_${nodeId}`;
+            writer.addObject(valueNode, node.name, arg);
+            writer.setNodeProperty(valueNode, node.property);
+            writer.addNodeTo(valueNode, lvlSlice);
 
-    //         writer.addObject(valueNode, nodeName, arg);
-    //         writer.setNodeProperty(valueNode, nodeData[0].$);
-    //         writer.addNodeTo(valueNode, lvlSlice);
+            writer.closeSpace();
+            return;
+        }
 
-    //         writer.closeSpace();
-    //         return;
-    //     }
-
-    // });
+    });
 
 
     cb(null, writer.getText());

@@ -1,8 +1,5 @@
 <?xml version="1.1" encoding="UTF-8" ?>
-<ROOT name="pixiApplication">
-    <templates>
-        <TEMPLATE name="SUBTMPLATENAME" src="subTemplate.xml" />
-    </templates>
+<ROOT appName="pixiApplication">
     <Container name="nnn">
         <Sprite name="bunny" x="50" y="50" :deep="15">
             <:arguments order="texture"/>
@@ -19,7 +16,7 @@
             </Sprite>
         </Container>
     </Container>
-    <Sprite :type="object" :order="15" name="bunny" x="50" y="50">
+    <Sprite name="bunny" x="50" y="50">
         <:arguments order="texture"/>
         <texture fromImage="assets/bunny.png"/>
     </Sprite>
