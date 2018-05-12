@@ -1,18 +1,6 @@
 const _ = require('lodash');
-const appSettings = require('./utils/argumentRun');
-const ROW_SPLIT = (appSettings.n) ? `;\n` : ';';
-const Writer = require('./writer');
-const writer = new Writer([], ROW_SPLIT);
-
-function capitalLatter(string) {
-    let symbol;
-    if (string.length > 1) {
-        symbol = string[0];
-    } else {
-        symbol = string;
-    }
-    return symbol === symbol.toUpperCase();
-}
+const Writer = require('./utils/writer');
+const parser = require('./parser');
 
 function generatorId(startId = -1) {
     return {
@@ -24,42 +12,48 @@ function generatorId(startId = -1) {
     }
 }
 
-
-function sliceParse(parseData, cb) {
-
-    const lvlSlice = 'rootContainer';
-
-    writer.rootStage(lvlSlice, parseData.root.$.name);
-
-    _.forEach(parseData.root, (nodeData, nodeName) => {
-
+function sliceGenerator(lvlSlice, rootNode, writer) {
+    _.forEach(rootNode.children, node => {
         const idGenerator = generatorId();
 
-        if (nodeName === '$') {
-            return;
-        }
-
-        if (capitalLatter(nodeName)) {
-            const texture = `PIXI.Texture.fromImage('assets/bunny.png')`;
+        if (node.isObject()) {
+            writer.newSpace();
 
             const nodeId = idGenerator.new();
-            const valueNode = `${nodeName}_${nodeId}`;
+            const nameSlice = node.property.name || node.name;
+            const valueNode = `${nameSlice}_${nodeId}`;
+            const arg = writer.addArguments(node.arguments);
 
-            writer.addNewPixiObject(valueNode, nodeName, texture);
-            writer.setNodeProperty(valueNode, nodeData[0].$);
+            writer.addObject(valueNode, node.name, arg);
+
+            if (node.children.length > 0) {
+                sliceGenerator(valueNode, node, writer);
+            }
+
+            writer.setNodeProperty(valueNode, node.property);
             writer.addNodeTo(valueNode, lvlSlice);
-            return;
-        }
 
-        if (!capitalLatter(nodeName)) {
+            writer.closeSpace();
             return;
         }
 
     });
+    return writer;
+}
+
+
+function mainGenerator (parseData, cb) {
+
+    const rootNode = parser(parseData);
+    const lvlSlice = 'rootContainer';
+    let writer = new Writer();
+
+    writer.rootStage(lvlSlice, rootNode.property.appName);
+    writer = sliceGenerator(lvlSlice, rootNode, writer);
 
 
     cb(null, writer.getText());
 }
 
 
-module.exports = sliceParse;
+module.exports = mainGenerator;
