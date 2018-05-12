@@ -1,7 +1,6 @@
 const _ = require('lodash');
 const Writer = require('./utils/writer');
-const Node = require('./utils/node');
-const CONST = require('./const');
+const parser = require('./parser');
 
 function generatorId(startId = -1) {
     return {
@@ -13,55 +12,24 @@ function generatorId(startId = -1) {
     }
 }
 
-function deepParse(list, parentNode) {
-    if (list.length === 0) {
-        return [];
-    }
-    _.forEach(list, (data, key) => {
-        const node = new Node(data[CONST.NAME_KEY], data[CONST.ATTR_KEY]);
-        if (node.isRule()) {
-            parentNode.addRule(node);
-        } else if (node.isArgument()){
-            parentNode.addArgument(node);
-        } else {
-            parentNode.addChild(node);
-        }
-       
-        if (_.isArray(data[CONST.CHILD_KEY])) {
-            deepParse(data[CONST.CHILD_KEY], node);
-        } else {
-            return [];
-        }
-    });
-    return parentNode;
-}
-
-function deepAnalysis(parseData) {
-    const rootObj = parseData[CONST.ROOT_TAG];
-    const rootNode = new Node(rootObj[CONST.NAME_KEY], rootObj[CONST.ATTR_KEY]);
-    return deepParse(rootObj[CONST.CHILD_KEY], rootNode);
-}
-
-
-function sliceParse(parseData, cb) {
-
-    const rootNode = deepAnalysis(parseData);
-    const lvlSlice = 'rootContainer';
-    const writer = new Writer();
-
-    writer.rootStage(lvlSlice, rootNode.property.appName);
-
+function sliceGenerator(lvlSlice, rootNode, writer) {
     _.forEach(rootNode.children, node => {
         const idGenerator = generatorId();
 
         if (node.isObject()) {
             writer.newSpace();
 
-            const arg = writer.addArguments(node.arguments);
             const nodeId = idGenerator.new();
-            const valueNode = `${node.name}_${nodeId}`;
+            const nameSlice = node.property.name || node.name;
+            const valueNode = `${nameSlice}_${nodeId}`;
+            const arg = writer.addArguments(node.arguments);
 
             writer.addObject(valueNode, node.name, arg);
+
+            if (node.children.length > 0) {
+                sliceGenerator(valueNode, node, writer);
+            }
+
             writer.setNodeProperty(valueNode, node.property);
             writer.addNodeTo(valueNode, lvlSlice);
 
@@ -70,10 +38,22 @@ function sliceParse(parseData, cb) {
         }
 
     });
+    return writer;
+}
+
+
+function mainGenerator (parseData, cb) {
+
+    const rootNode = parser(parseData);
+    const lvlSlice = 'rootContainer';
+    let writer = new Writer();
+
+    writer.rootStage(lvlSlice, rootNode.property.appName);
+    writer = sliceGenerator(lvlSlice, rootNode, writer);
 
 
     cb(null, writer.getText());
 }
 
 
-module.exports = sliceParse;
+module.exports = mainGenerator;
