@@ -121,7 +121,7 @@ module.exports = class Note {
         this[sRules] = [];
         this[sArguments] = [];
         this.name = name;
-        this.property = property;
+        this.property = property || {};
     }
 
 }

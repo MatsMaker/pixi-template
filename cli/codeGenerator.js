@@ -24,14 +24,16 @@ function sliceGenerator(lvlSlice, rootNode, writer) {
             const valueNode = `${nameSlice}_${nodeId}`;
             const arg = writer.addArguments(node);
 
-            writer.addObject(valueNode, node, arg);
+            const newObjRender = writer.addObject(valueNode, node, arg);
 
             if (node.children.length > 0) {
                 sliceGenerator(valueNode, node, writer);
             }
 
             writer.setNodeProperty(valueNode, node);
-            writer.addNodeTo(valueNode, lvlSlice);
+            if (!_.isUndefined(newObjRender) && newObjRender) {
+                writer.addNodeTo(valueNode, lvlSlice);
+            }
 
             writer.closeSpace();
             return;
