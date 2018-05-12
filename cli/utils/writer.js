@@ -65,7 +65,7 @@ module.exports = class Writer {
     addObject(valueNode, node, arg) {
         const pattern = this._patterns[node.name] || this._patterns['$defaultObject'];
         const patternResult = pattern(valueNode, node, arg.join(','), this.getIndent());
-        this.addRow(patternResult.string);
+        this.addRow(patternResult.code);
         return patternResult.autoRender;
     }
 
@@ -75,8 +75,8 @@ module.exports = class Writer {
             const valueName = arg.name + i;
             const pattern = this._patterns[node.name] || this._patterns['$defaultArguments'];
             const patternResult = pattern(valueName, arg, node, i);
-            if (!_.isUndefined(patternResult.string) && patternResult.autoRender)  {
-                this.addRow(patternResult.string);
+            if (!_.isUndefined(patternResult.code) && patternResult.autoRender)  {
+                this.addRow(patternResult.code);
             }
             arglist.push(valueName);
             return valueName;
@@ -84,8 +84,14 @@ module.exports = class Writer {
         return arglist;
     }
 
-    addRow(string = '') {
-        this._rows.push(this.getIndent() + string);
+    addRow(data = '') {
+        if (_.isString(data)) {
+            this._rows.push(this.getIndent() + data);
+        } else if (_.isArray(data)){
+            _.forEach(data, row => {
+                this._rows.push(this.getIndent() + row);
+            });
+        }
     }
 
     getIndent() {

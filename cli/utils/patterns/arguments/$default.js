@@ -4,6 +4,6 @@ module.exports = function (valueName, arg, node, i) {
     const PIXIObject = arg.name.charAt(0).toUpperCase() + arg.name.slice(1)
     return {
         autoRender: true,
-        string: `const ${valueName} = PIXI.${PIXIObject}.${method}('${parameter}')`,
+        code: `const ${valueName} = PIXI.${PIXIObject}.${method}('${parameter}')`,
     }
 }
