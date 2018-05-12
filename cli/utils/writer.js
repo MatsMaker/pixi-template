@@ -37,10 +37,10 @@ module.exports = class Writer {
         this.addRow(`const ${lvlSlice} = ${app}.stage`);
     }
 
-    setNodeProperty(lvlSlice, nodeProperty) {
-        _.forEach(nodeProperty, (value, property) => {
+    setNodeProperty(lvlSlice, node) {
+        _.forEach(node.property, (value, property) => {
             const propertyValue = (isNumber(value)) ? parseFloat(value) : `'${value}'`;
-            this.addRow(`${lvlSlice}.${property} = ${propertyValue}`);
+            this.addRow(`${lvlSlice}['${property}'] = ${propertyValue}`);
         });
     }
 
@@ -61,21 +61,18 @@ module.exports = class Writer {
         this.addRow(`${lvlSlice}.addChild(${child})`);
     }
 
-    addObject(valueNode, name, params) {
-        this.addRow(`const ${valueNode} = new PIXI.${name}(${params})`);
+    addObject(valueNode, node, arg) {
+        const pattern = patterns[node.name] || patterns['$defaultObject'];
+        this.addRow(pattern(valueNode, node, arg));
     }
 
-    addArguments(argList) {
+    addArguments(node) {
         const arglist = [];
-        _.forEach(argList, (arg, i) => {
+        _.forEach(node.arguments, (arg, i) => {
             const valueName = arg.name + i;
-            const pattern = patterns[arg.name];
-            if (!_.isUndefined(pattern)) {
-                this.addRow(pattern(valueName, arg));
-                arglist.push(valueName);
-            } else {
-                // TODO add default pattern this._addArgument(valueName, )
-            }
+            const pattern = patterns[node.name] || patterns['$defaultArguments'];
+            this.addRow(pattern(valueName, arg, node, i));
+            arglist.push(valueName);
             return valueName;
         });
         return arglist.join(',');

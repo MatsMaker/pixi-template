@@ -22,15 +22,15 @@ function sliceGenerator(lvlSlice, rootNode, writer) {
             const nodeId = idGenerator.new();
             const nameSlice = node.property.name || node.name;
             const valueNode = `${nameSlice}_${nodeId}`;
-            const arg = writer.addArguments(node.arguments);
+            const arg = writer.addArguments(node);
 
-            writer.addObject(valueNode, node.name, arg);
+            writer.addObject(valueNode, node, arg);
 
             if (node.children.length > 0) {
                 sliceGenerator(valueNode, node, writer);
             }
 
-            writer.setNodeProperty(valueNode, node.property);
+            writer.setNodeProperty(valueNode, node);
             writer.addNodeTo(valueNode, lvlSlice);
 
             writer.closeSpace();

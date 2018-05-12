@@ -1,3 +1,4 @@
 module.exports = {
-    texture: require('./texture'),
+    '$defaultObject': require('./objects/$default'),
+    '$defaultArguments': require('./arguments/$default'),
 }
