@@ -47,11 +47,12 @@ const rootContainer = pixiApplication.stage;
    // RedCircle
    const RedCircle_0 = new PIXI.Graphics();
    RedCircle_0.lineStyle(0);
-   RedCircle_0.beginFill(0xFF0000, 0.5);
+   RedCircle_0.beginFill(0xFF0000, 1);
    RedCircle_0.drawCircle(50,50,30);
    RedCircle_0.endFill();;
    RedCircle_0['x'] = 50;
    RedCircle_0['y'] = 50;
    RedCircle_0['radius'] = 30;
+   RedCircle_0['alpha'] = 0.7;
    rootContainer.addChild(RedCircle_0);
 };

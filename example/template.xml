@@ -20,6 +20,5 @@
         <:arguments order="texture"/>
         <texture fromImage="assets/bunny.png"/>
     </Sprite>
-    <RedCircle x="50" y="50" radius="30">
-    </RedCircle>
+    <RedCircle x="50" y="50" radius="30" alpha="0.7"/>
 </ROOT>
