@@ -1,3 +1,3 @@
 module.exports = {
-    for: require('./for'),
+    ':for': require('./for'),
 }

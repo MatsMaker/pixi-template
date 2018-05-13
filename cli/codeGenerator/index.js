@@ -2,6 +2,10 @@ const _ = require('lodash');
 const parser = require('./parser');
 const Writer = require('./writer');
 
+const appSettings = require('../utils/argumentRun');
+const extendRules = (appSettings.rulesFile) ? require(path.join('./', appSettings.rulesFile)) : {};
+const RULES = Object.assign({}, require('./rules'), extendRules);
+
 function generatorId(startId = -1) {
     return {
         new: () => {
@@ -24,9 +28,17 @@ function baseNodeGenerate(valueNode, node, lvlSlice, writer) {
     if (!_.isUndefined(newObjRender)) {
         writer.addNodeTo(valueNode, lvlSlice);
     }
+    return writer;
 }
 
 function sliceGenerator(lvlSlice, rootNode, writer) {
+
+    _.forEach(rootNode.children, (cNode, nIndex) => {
+        if (!_.isUndefined(cNode.rules[':for'])) {
+            RULES[':for'](cNode, nIndex);
+        }
+    });
+
     _.forEach(rootNode.children, node => {
         const idGenerator = generatorId();
 
@@ -37,11 +49,7 @@ function sliceGenerator(lvlSlice, rootNode, writer) {
             const nameSlice = node.property.name || node.name;
             const valueNode = `${nameSlice}_${nodeId}`;
 
-            if (_.isEmpty(node.rules)) {
-                baseNodeGenerate(valueNode, node, lvlSlice, writer);
-            } else {
-                baseNodeGenerate(valueNode, node, lvlSlice, writer);
-            }
+            baseNodeGenerate(valueNode, node, lvlSlice, writer);
 
             writer.closeSpace();
             return;
@@ -60,7 +68,6 @@ function mainGenerator (parseData, cb) {
 
     writer.rootStage(lvlSlice, rootNode.property.appName);
     writer = sliceGenerator(lvlSlice, rootNode, writer);
-
 
     cb(null, writer.getText());
 }

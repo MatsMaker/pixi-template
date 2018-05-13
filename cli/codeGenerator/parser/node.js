@@ -131,6 +131,7 @@ module.exports = class Note {
     }
 
     constructor(name, property) {
+        this.parent = null;
         this[sChildren] = [];
         this[sArguments] = [];
         this[sRules] = {};

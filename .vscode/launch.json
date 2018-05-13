@@ -14,7 +14,7 @@
                 "--template=template.xml",
                 "--output=template.js",
                 "-f",
-                "--patternsFile=C:\\Users\\Mats-PC\\Documents\\Projects\\pixi-template\\example\\paterns\\index.js"
+                "--patternsFile=C:\\Users\\Mats-PC\\Documents\\Projects\\pixi-template\\example\\paterns\\index.js",
             ],
             "runtimeArgs": [
                 "--nolazy",
