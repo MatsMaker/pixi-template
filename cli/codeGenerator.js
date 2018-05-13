@@ -31,7 +31,7 @@ function sliceGenerator(lvlSlice, rootNode, writer) {
             }
 
             writer.setNodeProperty(valueNode, node);
-            if (!_.isUndefined(newObjRender) && newObjRender) {
+            if (!_.isUndefined(newObjRender)) {
                 writer.addNodeTo(valueNode, lvlSlice);
             }
 
