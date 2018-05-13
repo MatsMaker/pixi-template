@@ -9,7 +9,9 @@ function deepParse(list, parentNode) {
     _.forEach(list, (data, key) => {
         const node = new Node(data[CONST.NAME_KEY], data[CONST.ATTR_KEY]);
         if (node.isRule()) {
-            parentNode.addRule(node);
+            parentNode.setRule(node.name, node);
+        } else if (node.isParameter()) {
+            parentNode.setParameter(node.name, node);
         } else if (node.isArgument()){
             parentNode.addArgument(node);
         } else {

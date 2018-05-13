@@ -1,3 +1,4 @@
+const _ = require('lodash');
 
 function isObject(name) {
     const firsSymbolName = getFirstSymbol(name);
@@ -15,6 +16,10 @@ function isArgument(name) {
 
 function isProperty(name) {
     return '$' === name;
+}
+
+function isParameter(name) {
+    return '_' === getFirstSymbol(name);
 }
 
 function isRule(name) {
@@ -51,6 +56,7 @@ const sType = Symbol('type');
 const sChildren = Symbol('children');
 const sRules = Symbol('rules');
 const sArguments = Symbol('arguments');
+const sParameter = Symbol('parameter');
 
 
 module.exports = class Note {
@@ -64,17 +70,13 @@ module.exports = class Note {
         return this[sName];
     }
 
-    set property(property) {
-        this[sProperty] = property;
-    }
-
     get property() {
         return this[sProperty];
     }
 
-    getProperty(pName) {
-        return this[sProperty][pName];
-    }
+    get parameter() {
+        return this[sParameter];
+    } 
 
     get type() {
         return this[sType];
@@ -96,16 +98,28 @@ module.exports = class Note {
         this[sChildren].push(child);
     }
 
-    addRule(rule) {
-        this[sRules].push(rule);
-    }
-
     addArgument(arg) {
         this[sArguments].push(arg);
     }
 
+    setRule(rName, rValue) {
+        this[sRules][rName] = rValue;
+    }
+
+    setProperty(pName, pValue) {
+        this[sProperty][pName] = pValue;
+    }
+
+    setParameter(pName, pValue) {
+        this[sParameter][pName] = pValue;
+    }
+
     isRule() {
         return isRule(this.name);
+    }
+
+    isParameter() {
+        return isParameter(this.name);
     }
 
     isArgument() {
@@ -118,10 +132,22 @@ module.exports = class Note {
 
     constructor(name, property) {
         this[sChildren] = [];
-        this[sRules] = [];
         this[sArguments] = [];
+        this[sRules] = {};
+        this[sProperty] = {};
+        this[sParameter] = {};
+
         this.name = name;
-        this.property = property || {};
+        const rulesKeys = Object.keys(property);
+        _.forEach(Object.keys(property), key => {
+            if (isRule(key)) {
+                this.setRule(key, property[key]);
+            } else if (isParameter(key)){
+                this.setParameter(key, property[key]);
+            } else {
+                this.setProperty(key, property[key]);
+            }
+        });
     }
 
 }
