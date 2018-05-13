@@ -1,11 +1,11 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 <ROOT appName="pixiApplication">
     <Container _id="15" name="cobalt" x="50" y="10">
-        <Sprite :for="3" name="cobaltBunny" x="10" y="10">
+        <Sprite :for="10" name="cobaltBunny{{key}}" x="{{key * 10}}" y="{{key * 10}}">
             <texture fromImage="assets/bunny.png"/>
         </Sprite>
         <Container name="subcontainer">
-            <Sprite name="bunny1" x="20" y="20">
+            <Sprite name="bunny1" x="100" y="10">
                 <:arguments order="texture"/>
                 <texture fromImage="assets/bunny.png"/>
             </Sprite>
