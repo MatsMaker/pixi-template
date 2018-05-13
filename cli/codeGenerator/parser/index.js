@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const CONST = require('./const');
-const Node = require('./utils/node');
+const CONST = require('../../const');
+const Node = require('./node');
 
 function deepParse(list, parentNode) {
     if (list.length === 0) {

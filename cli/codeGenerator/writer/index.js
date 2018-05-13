@@ -1,6 +1,6 @@
 const path = require('path');
 const _ = require('lodash');
-const appSettings = require('../utils/argumentRun');
+const appSettings = require('../../utils/argumentRun');
 const PATTERNS = require('./patterns');
 const ROW_SPLIT = (appSettings.f) ? `;\n` : ';';
 
