@@ -25,6 +25,10 @@ module.exports = class Writer {
         return this._rows.join(this._rowSplit) + this._rowSplit;
     }
 
+    get patterns() {
+        return this._patterns;
+    }
+
     constructor(rows = [], basePatterns = PATTERNS) {
         this._rowSplit = ROW_SPLIT;
         this._formatting = appSettings.f;

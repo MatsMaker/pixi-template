@@ -1,0 +1,6 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<ROOT some="need_fix_ for empty">
+    <Sprite name="eggHead" x="50" y="100">
+        <texture fromImage="assets/eggHead.png"/>
+    </Sprite>
+</ROOT>

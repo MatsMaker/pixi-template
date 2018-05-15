@@ -114,6 +114,7 @@ const rootContainer = pixiApplication.stage;
    RedCircle_0.beginFill(0xFF0000, 1);
    RedCircle_0.drawCircle(50,50,30);
    RedCircle_0.endFill();
+   RedCircle_0['name'] = 'RedCircle';
    RedCircle_0['x'] = 50;
    RedCircle_0['y'] = 50;
    RedCircle_0['radius'] = 30;

@@ -32,14 +32,27 @@ function baseNodeGenerate(valueNode, node, lvlSlice, writer) {
 }
 
 function sliceGenerator(lvlSlice, rootNode, writer) {
-
+    
     _.forEach(rootNode.children, (cNode, nIndex) => {
-        if (!_.isUndefined(cNode.rules[':for'])) {
-            RULES[':for'](cNode, nIndex);
+        _.forEach(Object.keys(cNode.rules), key => {
+            if (!_.isUndefined([key])) {
+                RULES[key](cNode, nIndex);
+            }
+        });
+    });
+
+    _.forEach(rootNode.children, (node, nIndex) => {
+        if (node.isBehavior()) {
+            if (!_.isUndefined(writer.patterns[node.name])) {
+                return await writer.patterns[node.name](rootNode, nIndex, writer, lvlSlice);
+            }else {
+                throw `${node.name} is non existent behavior`;
+            }
+           
         }
     });
 
-    _.forEach(rootNode.children, node => {
+    _.forEach(rootNode.children, (node, nIndex) => {
         const idGenerator = generatorId();
 
         if (node.isObject()) {

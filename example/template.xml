@@ -6,14 +6,13 @@
         </Sprite>
         <Container name="subcontainer">
             <Sprite name="bunny1" x="100" y="10">
-                <:arguments order="texture"/>
                 <texture fromImage="assets/bunny.png"/>
             </Sprite>
         </Container>
     </Container>
     <Sprite name="freeBunny" x="50" y="100">
-        <:arguments order="texture"/>
         <texture fromImage="assets/bunny.png"/>
     </Sprite>
-    <RedCircle x="50" y="50" radius="30" alpha="0.7"/>
+    <RedCircle name="RedCircle" x="50" y="50" radius="30" alpha="0.7"/>
+    <TEMPLATE src="./subTempalte"/>
 </ROOT>

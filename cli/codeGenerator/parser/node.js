@@ -2,10 +2,10 @@ const _ = require('lodash');
 
 function isObject(name) {
     const firsSymbolName = getFirstSymbol(name);
-    return name === firsSymbolName.toUpperCase() + name.substr(1);
+    return name === firsSymbolName.toUpperCase() + name.substr(1, name.length - 2) + name.substr(name.length - 1).toLowerCase();
 }
 
-function isTheme(name) {
+function isBehavior(name) {
     return name === name.toUpperCase();
 }
 
@@ -37,8 +37,8 @@ function getType(name) {
     if (isRule(name)) {
         return 'rule';
     }
-    if (isTheme(name)) {
-        return 'theme';
+    if (isBehavior(name)) {
+        return 'behavior';
     }
     if (isObject(name)) {
         return 'object';
@@ -124,6 +124,10 @@ module.exports = class Note {
 
     isArgument() {
         return isArgument(this.name);
+    }
+
+    isBehavior() {
+        return isBehavior(this.name);
     }
 
     isObject() {
