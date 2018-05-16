@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const CONST = require('./const');
-const Node = require('./utils/node');
+const CONST = require('../../const');
+const Node = require('./node');
 
 function deepParse(list, parentNode) {
     if (list.length === 0) {
@@ -8,8 +8,11 @@ function deepParse(list, parentNode) {
     }
     _.forEach(list, (data, key) => {
         const node = new Node(data[CONST.NAME_KEY], data[CONST.ATTR_KEY]);
+        node.parent = parentNode;
         if (node.isRule()) {
-            parentNode.addRule(node);
+            parentNode.setRule(node.name, node);
+        } else if (node.isParameter()) {
+            parentNode.setParameter(node.name, node);
         } else if (node.isArgument()){
             parentNode.addArgument(node);
         } else {

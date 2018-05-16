@@ -1,7 +1,7 @@
+const path = require('path');
 const _ = require('lodash');
-const appSettings = require('../utils/argumentRun');
-const patterns = require('./patterns');
-
+const appSettings = require('../../utils/argumentRun');
+const PATTERNS = require('./patterns');
 const ROW_SPLIT = (appSettings.f) ? `;\n` : ';';
 
 function isNumber(s){
@@ -25,22 +25,23 @@ module.exports = class Writer {
         return this._rows.join(this._rowSplit) + this._rowSplit;
     }
 
-    constructor(rows = []) {
+    constructor(rows = [], basePatterns = PATTERNS) {
         this._rowSplit = ROW_SPLIT;
         this._formatting = appSettings.f;
         this._rows = rows || [];
         this._indentSpace = '   ';
         this._indentIndex = 0;
+        this._patterns = this._getPatterns(basePatterns);
     }
 
     rootStage(lvlSlice, app) {
         this.addRow(`const ${lvlSlice} = ${app}.stage`);
     }
 
-    setNodeProperty(lvlSlice, nodeProperty) {
-        _.forEach(nodeProperty, (value, property) => {
+    setNodeProperty(lvlSlice, node) {
+        _.forEach(node.property, (value, property) => {
             const propertyValue = (isNumber(value)) ? parseFloat(value) : `'${value}'`;
-            this.addRow(`${lvlSlice}.${property} = ${propertyValue}`);
+            this.addRow(`${lvlSlice}['${property}'] = ${propertyValue}`);
         });
     }
 
@@ -61,28 +62,36 @@ module.exports = class Writer {
         this.addRow(`${lvlSlice}.addChild(${child})`);
     }
 
-    addObject(valueNode, name, params) {
-        this.addRow(`const ${valueNode} = new PIXI.${name}(${params})`);
+    addObject(valueNode, node, arg) {
+        const pattern = this._patterns[node.name] || this._patterns['$defaultObject'];
+        const patternResult = pattern(valueNode, node, arg.join(','), this.getIndent());
+        this.addRow(patternResult);
+        return valueNode;
     }
 
-    addArguments(argList) {
+    addArguments(node) {
         const arglist = [];
-        _.forEach(argList, (arg, i) => {
+        _.forEach(node.arguments, (arg, i) => {
             const valueName = arg.name + i;
-            const pattern = patterns[arg.name];
-            if (!_.isUndefined(pattern)) {
-                this.addRow(pattern(valueName, arg));
-                arglist.push(valueName);
-            } else {
-                // TODO add default pattern this._addArgument(valueName, )
+            const pattern = this._patterns[node.name] || this._patterns['$defaultArguments'];
+            const patternResult = pattern(valueName, arg, node, i);
+            if (!_.isUndefined(patternResult))  {
+                this.addRow(patternResult);
             }
+            arglist.push(valueName);
             return valueName;
         });
-        return arglist.join(',');
+        return arglist;
     }
 
-    addRow(string = '') {
-        this._rows.push(this.getIndent() + string);
+    addRow(data = '') {
+        if (_.isString(data)) {
+            this._rows.push(this.getIndent() + data);
+        } else if (_.isArray(data)){
+            _.forEach(data, row => {
+                this._rows.push(this.getIndent() + row);
+            });
+        }
     }
 
     getIndent() {
@@ -96,10 +105,12 @@ module.exports = class Writer {
         return indent;
     }
 
-    _addArgument(nodeName, method, arg) {
-        const name = nodeName.replaceAt(0, nodeName[0].toUpperCase());
-        this.addRow(`const ${nodeName} = PIXI.${name}.${method}(${arg})`);
-        return nodeName;
-    }
+    _getPatterns(basePatterns) {
+        if (appSettings.patternsFile) {
+            const extendPatterns = require(path.join('./', appSettings.patternsFile));
+            return Object.assign({}, basePatterns, extendPatterns);
+        }
+        return patterns;
+    };
 
 }

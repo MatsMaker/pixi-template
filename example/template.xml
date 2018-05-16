@@ -1,23 +1,19 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 <ROOT appName="pixiApplication">
-    <Container name="cobalt">
-        <Sprite name="cobaltBunny1" x="150" y="90">
-            <:arguments order="texture"/>
-            <texture fromImage="assets/bunny.png"/>
-        </Sprite>
-        <Sprite name="cobaltBunny2" x="50" y="50">
-            <:arguments order="texture"/>
+    <Container _id="15" name="cobalt" x="50" y="10">
+        <Sprite :for="10" name="cobaltBunny{{key}}" x="{{key * 10}}" y="{{key * 10}}">
             <texture fromImage="assets/bunny.png"/>
         </Sprite>
         <Container name="subcontainer">
-            <Sprite name="bunny1" x="300" y="250">
+            <Sprite name="bunny1" x="100" y="10">
                 <:arguments order="texture"/>
                 <texture fromImage="assets/bunny.png"/>
             </Sprite>
         </Container>
     </Container>
-    <Sprite name="freeBunny" x="450" y="80">
+    <Sprite name="freeBunny" x="50" y="100">
         <:arguments order="texture"/>
         <texture fromImage="assets/bunny.png"/>
     </Sprite>
+    <RedCircle x="50" y="50" radius="30" alpha="0.7"/>
 </ROOT>
