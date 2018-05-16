@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const xml2js = require('xml2js');
-const {promisify} = require('util');
+const {promisify} = require("es6-promisify"); // require('util');
 
 const appSettings = require('./utils/argumentRun');
 const mainGenerator = require('./codeGenerator').mainGenerator;
