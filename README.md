@@ -2,6 +2,17 @@
 
 Converter tempalte xml to pixi js view
 
+#### from
+
+![xml-examle](previews/xml-examle.png?raw=true "xml-examle")
+
+#### result file
+
+![js-result](previews/js-result.png?raw=true "js-result")
+
+#### preview result
+
+![preview](previews/preview.png?raw=true "preview")
 
 ## How use
 
