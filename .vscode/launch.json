@@ -4,22 +4,21 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "type": "node",
             "request": "launch",
             "name": "ptmpl",
-            "cwd": "${workspaceRoot}/example",
+            "cwd": "${workspaceFolder}/example",
             "args": [
                 "--template=template.xml",
                 "--output=template.js",
                 "-f",
-                "--patternsFile=D:\\pixi-template\\example\\paterns\\index.js",
+                "--patternsFile=${workspaceFolder}/example/paterns/index.js",
             ],
             "runtimeArgs": [
                 "--nolazy",
             ],
-            "program": "${workspaceRoot}\\cli\\index.js"
+            "program": "${workspaceFolder}/cli/index.js"
         }
     ]
 }

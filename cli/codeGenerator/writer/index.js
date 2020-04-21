@@ -107,7 +107,7 @@ module.exports = class Writer {
 
     _getPatterns(basePatterns) {
         if (appSettings.patternsFile) {
-            const extendPatterns = require(path.join('./', appSettings.patternsFile));
+            const extendPatterns = require(appSettings.patternsFile);
             return Object.assign({}, basePatterns, extendPatterns);
         }
         return patterns;
