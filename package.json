@@ -21,7 +21,7 @@
     "npm": ">=5.6.0"
   },
   "dependencies": {
-    "lodash": ">=4.17.12",
+    "lodash": ">=4.17.19",
     "minimist": ">=1.2.3",
     "xml2js": "^0.4.19"
   },
